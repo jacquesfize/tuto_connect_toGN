@@ -1,5 +1,5 @@
 from streamlit_searchbox import st_searchbox
-from ..api.web import autocomplete_taxons
+from api.web import autocomplete_taxons
 
 
 def taxref_input(session_key: str = "cd_nom"):

@@ -1,8 +1,8 @@
-from api.database import new_species
 import streamlit as st
 
+from api.occtax import add_observation
+from api.sql_queries import new_species
 from api.synthese import load_observations
-from api.web import add_observation, autocomplete_taxons, get_observations, get_token
 
 from widget.taxon import taxref_input
 
