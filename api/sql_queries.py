@@ -1,11 +1,5 @@
 import streamlit as st
 
-LAST_OBSERVATIONS_QUERY = """
-SELECT *
-FROM gn_synthese.synthese
-LIMIT 10;
-"""
-
 NEW_SPECIES_QUERY = lambda date: f"""
 select distinct t.cd_ref, t.lb_nom, t.group2_inpn, t.regne, t.ordre, t.famille, string_agg(distinct observers, ', ')
     from gn_synthese.synthese s 
@@ -20,13 +14,6 @@ select distinct t.cd_ref, t.lb_nom, t.group2_inpn, t.regne, t.ordre, t.famille, 
     group by t.cd_ref, t.lb_nom, t.group2_inpn, t.regne, t.ordre, t.famille
 
 """
-
-
-def last_observations():
-    conn = st.connection("sql")
-    df = conn.query(LAST_OBSERVATIONS_QUERY)
-    conn.close()
-    return df
 
 
 def new_species(date: str):

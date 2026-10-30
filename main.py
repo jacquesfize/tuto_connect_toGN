@@ -1,10 +1,10 @@
-from api.database import last_observations, new_species
+from api.database import new_species
 import streamlit as st
 
+from api.synthese import load_observations
 from api.web import add_observation, autocomplete_taxons, get_observations, get_token
-from streamlit_searchbox import st_searchbox
 
-from utils import geojson_to_gdf
+from widget.taxon import taxref_input
 
 import folium
 from streamlit_folium import st_folium
@@ -12,24 +12,15 @@ from streamlit_folium import st_folium
 st.title("Use GeoNature to build an app")
 
 
-@st.cache_data(show_spinner="Loading observations...")
-def load_obs(limit: int, **filters):
-    return geojson_to_gdf(get_observations(limit=limit, **filters))
-
-
 st.header("Parcourir les dernières observations (API)")
 col1, col2 = st.columns(2)
 with col1:
     limit = st.number_input("limit", 1, 25000, 10)
-    cd_ref = st_searchbox(
-        autocomplete_taxons,
-        placeholder="Search Taxref... ",
-        key="cd_ref",
-    )
+    cd_ref = taxref_input("cd_ref")
     st.write(f"Selected value: {cd_ref}")
     filters = {"cd_ref": [cd_ref]} if cd_ref else {}
 with col2:
-    st.map(load_obs(limit, **filters))
+    st.map(load_observations(limit, **filters))
 
 st.header("Nouvelles espèces découverte (SQL)")
 col1, col2 = st.columns(2)
@@ -46,16 +37,12 @@ with col2:
     rows = event.selection.rows
     if rows:
         selected_cd_ref = int(species.iloc[rows[0]]["cd_ref"])
-        st.map(load_obs(limit, cd_ref=[selected_cd_ref]))
+        st.map(load_observations(limit, cd_ref=[selected_cd_ref]))
     else:
         st.info("Sélectionnez une ligne pour voir les observations sur la carte.")
 
 st.header("Add a new Observation (API)")
-taxon = st_searchbox(
-    lambda s: autocomplete_taxons(s, full=True),
-    placeholder="Search Taxref... ",
-    key="taxon_add",
-)
+taxon = taxref_input("taxon_add")
 
 pick_map = folium.Map(location=[45.18, 5.72], zoom_start=8)
 # keep the previously picked point visible
