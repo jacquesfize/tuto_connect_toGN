@@ -2,6 +2,7 @@ import datetime
 
 import streamlit as st
 
+from api.chart.chart import taxon_distribution_plot, taxon_treemap_plot
 from api.occtax import add_observation
 from api.sql_queries import new_species
 from api.synthese import load_observations
@@ -22,7 +23,7 @@ def browse_observations():
         st.write(f"Selected value: {cd_ref}")
         filters = {"cd_ref": [cd_ref]} if cd_ref else {}
     with col2:
-        st.map(load_observations(limit, **filters))
+        st.map(load_observations(limit, {}, **filters))
     return limit
 
 
@@ -42,7 +43,7 @@ def discover_new_species(limit):
         rows = event.selection.rows
         if rows:
             selected_cd_ref = int(species.iloc[rows[0]]["cd_ref"])
-            st.map(load_observations(limit, cd_ref=[selected_cd_ref]))
+            st.map(load_observations(limit, {}, cd_ref=[selected_cd_ref]))
         else:
             st.info("Sélectionnez une ligne pour voir les observations sur la carte.")
 
@@ -93,11 +94,32 @@ def add_new_observation():
                 st.error(f"Échec de l'ajout (HTTP {status})")
 
 
+def distribution_plot():
+    st.subheader("Distribution plot")
+    df = load_observations(
+        1000,
+        query_params={
+            "with_field": [
+                "regne",
+                "phylum",
+                "classe",
+                "ordre",
+                "famille",
+                "sous_famille",
+                "group1_inpn",
+            ]
+        },
+    )
+    taxon_distribution_plot(df, "ordre")
+    taxon_treemap_plot(df)
+
+
 def main():
     st.title("Use GeoNature to build an app")
     limit = browse_observations()
     discover_new_species(limit)
     add_new_observation()
+    distribution_plot()
 
 
 main()

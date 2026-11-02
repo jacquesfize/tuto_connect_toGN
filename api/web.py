@@ -35,9 +35,9 @@ class GeoNatureClient:
         return self.request("POST", path, **kwargs)
 
     # --- synthese -------------------------------------------------------
-    def get_observations(self, limit: int = 100, **filters):
+    def get_observations(self, limit: int = 100, query_params: dict = {}, **filters):
         return self.post(
-            "/synthese/for_web", params={"limit": limit}, json=filters
+            "/synthese/for_web", params={"limit": limit, **query_params}, json=filters
         ).json()
 
     # --- taxhub ---------------------------------------------------------
