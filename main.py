@@ -1,9 +1,12 @@
+import datetime
+
 import streamlit as st
 
 from api.occtax import add_observation
 from api.sql_queries import new_species
 from api.synthese import load_observations
 
+from widget.nomenclature import nomenclature_input
 from widget.taxon import taxref_input
 
 import folium
@@ -42,7 +45,7 @@ with col2:
         st.info("Sélectionnez une ligne pour voir les observations sur la carte.")
 
 st.header("Add a new Observation (API)")
-taxon = taxref_input("taxon_add")
+taxon = taxref_input("taxon_add", full=True)
 
 pick_map = folium.Map(location=[45.18, 5.72], zoom_start=8)
 # keep the previously picked point visible
@@ -57,9 +60,27 @@ if out and out.get("last_clicked"):
 if "picked" in st.session_state:
     lat, lon = st.session_state.picked
     st.write(f"lat={lat:.5f}, lon={lon:.5f}")
+col1, col2, col3 = st.columns(3)
+with col1:
+    obs_date = st.date_input("Date de l'observation", datetime.date.today())
+with col2:
+    id_sex = nomenclature_input("SEXE", "Sexe")
+with col3:
+    count = st.number_input("Effectif", 1, 100000, 1)
+
 if taxon and lat and lon:
-    st.write(taxon["lb_nom"], taxon["cd_nom"], lat, lon)
-    st.button(
-        "Ajouter une obs",
-        on_click=lambda: add_observation(taxon["cd_nom"], taxon["lb_nom"], lat, lon),
-    )
+    st.write(taxon["nom_valide"], taxon["cd_nom"], lat, lon)
+    if st.button("Ajouter une obs"):
+        status = add_observation(
+            taxon["cd_nom"],
+            taxon["nom_valide"],
+            lat,
+            lon,
+            date_min=obs_date,
+            count=count,
+            id_nomenclature_sex=id_sex,
+        )
+        if status == 200:
+            st.success("Observation ajoutée")
+        else:
+            st.error(f"Échec de l'ajout (HTTP {status})")

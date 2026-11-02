@@ -48,10 +48,10 @@ class GeoNatureClient:
         if full:
             return [
                 (
-                    t["lb_nom"],
+                    t["nom_valide"],
                     {
-                        "lb_nom": t["lb_nom"],
                         "nom_valide": t["nom_valide"],
+                        "cd_nom": t["cd_nom"],
                     },
                 )
                 for t in data
