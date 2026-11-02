@@ -4,7 +4,7 @@ import streamlit as st
 
 from api.chart.chart import taxon_distribution_plot, taxon_treemap_plot
 from api.occtax import add_observation
-from api.sql_queries import new_species
+from api.sql_queries import last_observations_taxonomy, new_species
 from api.synthese import load_observations
 
 from widget.nomenclature import nomenclature_input
@@ -110,6 +110,13 @@ def distribution_plot():
             ]
         },
     )
+    taxon_distribution_plot(df, "observers")
+    taxon_treemap_plot(df)
+
+
+def distribution_plot_from_sql():
+    st.subheader("Distribution plot (SQL)")
+    df = last_observations_taxonomy(1000)
     taxon_distribution_plot(df, "ordre")
     taxon_treemap_plot(df)
 
@@ -120,6 +127,7 @@ def main():
     discover_new_species(limit)
     add_new_observation()
     distribution_plot()
+    distribution_plot_from_sql()
 
 
 main()

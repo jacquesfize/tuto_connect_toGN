@@ -16,8 +16,24 @@ select distinct t.cd_ref, t.lb_nom, t.group2_inpn, t.regne, t.ordre, t.famille, 
 """
 
 
+LAST_OBSERVATIONS_TAXONOMY_QUERY = """
+select s.id_synthese, t.lb_nom, t.regne, t.phylum, t.classe, t.ordre, t.famille, t.sous_famille, t.group1_inpn
+    from gn_synthese.synthese s
+    join taxonomie.taxref t using(cd_nom)
+    order by s.date_min desc
+    limit :limit
+"""
+
+
 def new_species(date: str):
     conn = st.connection("sql")
     df = conn.query(NEW_SPECIES_QUERY(date))
+    conn.close()
+    return df
+
+
+def last_observations_taxonomy(limit: int):
+    conn = st.connection("sql")
+    df = conn.query(LAST_OBSERVATIONS_TAXONOMY_QUERY, params={"limit": limit})
     conn.close()
     return df
