@@ -44,13 +44,19 @@ class GeoNatureClient:
     def autocomplete_taxons(self, search_str: str = None, full: bool = False):
         if not search_str:
             return []
-        data = self.get(f"/taxhub/api/taxref/search/lb_nom/{search_str}").json()
+        data = self.get(f"/taxhub/api/taxref/search/nom_valide/{search_str}").json()
         if full:
             return [
-                (t["lb_nom"], {"lb_nom": t["lb_nom"], "cd_nom": t["cd_nom"]})
+                (
+                    t["lb_nom"],
+                    {
+                        "lb_nom": t["lb_nom"],
+                        "nom_valide": t["nom_valide"],
+                    },
+                )
                 for t in data
             ]
-        return [(t["lb_nom"], t["cd_ref"]) for t in data]
+        return [(t["nom_valide"], t["cd_ref"]) for t in data]
 
     # --- nomenclatures --------------------------------------------------
     @st.cache_data(show_spinner=False, ttl=3600)
