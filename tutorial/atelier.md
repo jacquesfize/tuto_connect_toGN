@@ -1,7 +1,6 @@
 # Atelier Connexion d'une application avec GeoNature
 
-Dans cet atelier, l'objectif est de montrer quelles sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application. 
-
+Dans cet atelier, l'objectif est de montrer quelles sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application.
 
 ## Objectif de l'atelier
 
@@ -11,10 +10,9 @@ Pour cela, nous vous proposons d'utiliser Streamlit pour sa simplicité d'utilis
 
 _Sachant que le public de cet atelier est mixte, nous vous proposons de former des groupes avec au moins une personne ayant des connaissances dans le langage Python._
 
-
 ## Préparer son environnement de développement
 
-Comme vous l'avez peut-être deviné, nous allons nous appuyer sur le langage Python pour cet atelier !  
+Comme vous l'avez peut-être deviné, nous allons nous appuyer sur le langage Python pour cet atelier !
 
 ### Installer `uv`
 
@@ -30,39 +28,38 @@ Il suffit de lancer la commande `uv sync`.
 
 Une fois terminée, lancez `uv run check_env.py` pour vérifier que l'environnement virtuel est bien installé !
 
-
 ### Configurer l'application avec son GeoNature
 
-Pour donner accès à son GeoNature, l'application utilise un fichier de configuration `.streamlit/secrets.toml`. 
+Pour donner accès à son GeoNature, l'application utilise un fichier de configuration `.streamlit/secrets.toml`.
 
 Créez ce fichier en vous appuyant sur le squelette suivant :
 
 ```toml
 # API GeoNature (api/web.py)
 [geonature]
-api_url = "https://<votre-geonature>/api"
-login = "<login>"
-password = "<mot de passe>"
+api_url = "https://demo.geonature.fr/geonature/api"
+login = "admin"
+password = "admin"
 
 # Connexion à la base GeoNature (api/sql_queries.py : st.connection("sql"))
 [connections.sql]
-url = "postgresql+psycopg2://<user>:<password>@<host>:5432/<database>"
+url = "postgresql+psycopg2://rencontres_gn:<mdp>@demo.geonature.fr:5437/geonaturedemodb"
+
 
 ```
 
-
-
-
 ### Lancement de l'app
-Une fois votre configuration remplie, vous pouvez lancer l'application avec la commande suivante : 
+
+Une fois votre configuration remplie, vous pouvez lancer l'application avec la commande suivante :
 
 ```sh
 streamlit run main.py
 ```
 
-## Trois grands groupes d'accès aux données 
+## Trois grands groupes d'accès aux données
 
 L'accès aux données de GeoNature peut se diviser en trois grandes catégories :
+
 - API
 - Fichier
 - SQL
@@ -108,7 +105,6 @@ Par exemple, il est possible de récupérer la liste des cadres d'acquisition av
 
 Dans une requête, il est possible d'ajouter des paramètres pour filtrer les données.
 
-
 ### Export
 
 Un des points d'entrée les plus utilisés est le module Export. Ce dernier permet de définir une « vue », une table virtuelle qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
@@ -131,25 +127,24 @@ Une deuxième manière consiste à générer des fichiers de manière périodiqu
 
 ![alt text](data-gouv.png)
 
-
 <!-- Le parc amazonien de Guyane utilise cette méthode pour peupler son LizMap. -->
 
 #### Export - API
 
-Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution des données en temps réel ! Pas de panique !
-Lorsque vous créez un export, ce dernier est rendu accessible via une API disponible à l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`. 
+Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique !
+lorsque vous créer un export, ce dernier est rendu accessible dans une API accessible depuis l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`.
 
 Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilisent cette API pour accéder aux données d'une instance de GeoNature.
 
 ![alt text](bam.png)
 
-### SQL 
+### SQL
 
 Si tout a échoué dans votre quête pour récupérer les données par l'API ou par l'export, alors il vous reste... à faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
 
 ## Streamlit
 
-Pour développer votre dashboard, nous vous proposons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et de très haut niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
+Pour développer votre dashboard, nous vous proposons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et très haut-niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées :
 
 ```python
 import streamlit as st
@@ -182,14 +177,14 @@ else:
 
 `streamlit` est construit autour de méthodes permettant de faire des choses simples avec le moins de lignes de code possible. Dans l'exemple ci-dessus :
 
- - `st.write` affiche du texte 
- - `st.number_input` crée un champ pour saisir un nombre et le stocke dans la variable associée. **Si une valeur d'un formulaire est modifiée, alors l'ensemble du code qui utilise les variables associées (ici, `lon1, lon2, lat1, lat2`) se relance.**
- - `st.subheader` crée un sous-titre et `st.header` crée un titre.
- - `st.columns(n)` crée `n` colonnes
+- `st.write` affiche du texte
+- `st.number_input` crée un champ pour saisir un nombre et le stocke dans la variable associée. **Si une valeur d'un formulaire est modifiée, alors l'ensemble du code qui utilise les variables associées (ici, `lon1, lon2, lat1, lat2`) se relance.**
+- `st.subheader` crée un sous-titre et `st.header` crée un titre.
+- `st.columns(n)` crée `n` colonnes
 
+Pour plus d'informations, rendez-vous sur la doc de [**Streamlit** ](https://docs.streamlit.io/develop/api-reference)
 
- Pour plus d'informations, rendez-vous sur la doc de [**Streamlit** ](https://docs.streamlit.io/develop/api-reference)
-
+Pour plus d'informations, rendez-vous sur la doc de [**Streamlit** ](https://docs.streamlit.io/develop/api-reference)
 
 > [!NOTE]
 > Dans ce tutoriel, nous utilisons **Streamlit** pour sa simplicité et la rapidité de mise en place de POCs. Il existe toutefois plusieurs technologies, chacune avec ses avantages et inconvénients, permettant de faire de la visualisation de données. Pour n'en citer qu'une infime partie :
@@ -200,32 +195,33 @@ else:
 > - <img src="https://cdn.simpleicons.org/gradio" height="20"> **Gradio** : framework d'interfaces web plus orienté vers la connexion à des modèles de machine learning, deep learning, etc. <https://gradio.app/>
 > - Autres : [Observable](https://observablehq.com/) (équivalent notebook 100 % JS, uniquement utilisable en ligne), [Flet](https://flet.dev/)
 
-
-
 ### Ensemble de fonctions fournies
 
 Vous trouverez dans le dossier `api`, un ensemble de fonctions Python pour récupérer des données sur votre instance GeoNature.
-
 
 #### GeoNature Client
 
 `api/web.py` définit `GeoNatureClient` : URL de l'API, authentification (`st.secrets["geonature"]`) et appels HTTP. Une instance partagée s'obtient avec `get_client()`.
 
-| Méthode | Route | Usage |
-|---|---|---|
-| `get_observations(limit, query_params, **filters)` | `POST /synthese/for_web` | Observations de la synthèse |
-| `autocomplete_taxons(search_str, full)` | `GET /taxhub/api/taxref/search/nom_valide/{texte}` | Recherche Taxref |
-| `get_nomenclatures(code_type)` | `GET /nomenclatures/nomenclature/{code_type}` | Termes d'une nomenclature |
-| `get_default_nomenclatures(*code_types)` | `GET /occtax/defaultNomenclatures` | Valeurs par défaut Occtax |
-| `add_releve(payload)` | `POST /occtax/releve` | Création d'un relevé |
+| Méthode                                             | Route                                              | Usage                       |
+| --------------------------------------------------- | -------------------------------------------------- | --------------------------- |
+| `get_observations(limit, query_params, **filters)`  | `POST /synthese/for_web`                           | Observations de la synthèse |
+| `autocomplete_taxons(search_str, full)`             | `GET /taxhub/api/taxref/search/nom_valide/{texte}` | Recherche Taxref            |
+| `get_nomenclatures(code_type)`                      | `GET /nomenclatures/nomenclature/{code_type}`      | Termes d'une nomenclature   |
+| `get_default_nomenclatures(*code_types)`            | `GET /occtax/defaultNomenclatures`                 | Valeurs par défaut Occtax   |
+| `add_releve(payload)`                               | `POST /occtax/releve`                              | Création d'un relevé        |
+| `get_data_from_export(id_export, limit, **filters)` | `GET /exports/api/{id_export}`                     | Données d'un export         |
 
 Pour une autre route : `get_client().get(chemin)` ou `.post(chemin, json=...)` (le jeton est ajouté automatiquement).
 
 ```python
 from api.synthese import load_observations
 from api.occtax import add_observation
+from api.export import load_data_from_export
 
 gdf = load_observations(100, {}, cd_ref=[60612])  # GeoDataFrame, filtres de la synthèse
+
+gdf = load_data_from_export(38, nom_valide="Lynx lynx")  # GeoDataFrame, filtres en query string
 
 add_observation(cd_nom=60612, nom_cite="Lynx lynx", lat=44.9, lon=6.3, id_dataset=1)
 ```
@@ -247,8 +243,7 @@ Requêtes fournies : `last_observations_taxonomy(limit)` et `new_species(date)`.
 > [!WARNING]
 > Utilisez un compte en lecture seule et des paramètres (`:limit`) plutôt que d'interpoler du texte (injection SQL).
 
-
-### Widget mis à disposition 
+### Widget mis à disposition
 
 Pour ne pas perdre de temps sur les formulaires, le dossier `widget/` contient deux composants Streamlit prêts à l'emploi. Ils appellent l'API de GeoNature/TaxHub via le client défini dans `api/web.py`.
 
@@ -262,10 +257,10 @@ from widget.nomenclature import nomenclature_input
 id_sex = nomenclature_input("SEXE", "Sexe")
 ```
 
- - `code_type` : code du type de nomenclature (ex : `"SEXE"`).
- - `label` : libellé affiché au-dessus du champ (par défaut, le `code_type`).
- - `session_key` : clé Streamlit du widget (par défaut `nomenclature_<code_type>`). À préciser si vous utilisez deux fois le même type sur la page.
- - **Retourne** l'`id_nomenclature` du terme choisi, ou `None` si rien n'est sélectionné.
+- `code_type` : code du type de nomenclature (ex : `"SEXE"`).
+- `label` : libellé affiché au-dessus du champ (par défaut, le `code_type`).
+- `session_key` : clé Streamlit du widget (par défaut `nomenclature_<code_type>`). À préciser si vous utilisez deux fois le même type sur la page.
+- **Retourne** l'`id_nomenclature` du terme choisi, ou `None` si rien n'est sélectionné.
 
 Les termes proviennent de la route `/nomenclatures/nomenclature/{code_type}`.
 
@@ -280,9 +275,8 @@ cd_ref = taxref_input("cd_ref")                    # -> cd_ref (int) ou None
 taxon = taxref_input("taxon_add", full=True)       # -> {"nom_valide": ..., "cd_nom": ...} ou None
 ```
 
- - `session_key` : clé Streamlit du widget (par défaut `"cd_nom"`). Elle doit être unique par widget sur la page.
- - `full` : si `False` (défaut), retourne le `cd_ref` du taxon, pratique pour filtrer la synthèse (`{"cd_ref": [cd_ref]}`). Si `True`, retourne un dictionnaire avec `nom_valide` et `cd_nom`, nécessaire pour ajouter une observation.
-
+- `session_key` : clé Streamlit du widget (par défaut `"cd_nom"`). Elle doit être unique par widget sur la page.
+- `full` : si `False` (défaut), retourne le `cd_ref` du taxon, pratique pour filtrer la synthèse (`{"cd_ref": [cd_ref]}`). Si `True`, retourne un dictionnaire avec `nom_valide` et `cd_nom`, nécessaire pour ajouter une observation.
 
 > [!NOTE]
 > Ces deux widgets sont déjà utilisés dans `main.py` :

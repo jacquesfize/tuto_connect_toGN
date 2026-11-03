@@ -6,6 +6,7 @@ from api.chart.chart import taxon_distribution_plot, taxon_treemap_plot
 from api.occtax import add_observation
 from api.sql_queries import last_observations_taxonomy, new_species
 from api.synthese import load_observations
+from api.export import load_data_from_export
 
 from widget.nomenclature import nomenclature_input
 from widget.taxon import taxref_input
@@ -46,6 +47,12 @@ def discover_new_species(limit):
             st.map(load_observations(limit, {}, cd_ref=[selected_cd_ref]))
         else:
             st.info("Sélectionnez une ligne pour voir les observations sur la carte.")
+
+
+def observation_around():
+    st.header("Observations autour des rencontres (API export)")
+    st.map(load_data_from_export(38), size=5)
+
 
 
 def add_new_observation():
@@ -125,8 +132,9 @@ def main():
     st.title("Use GeoNature to build an app")
     limit = browse_observations()
     discover_new_species(limit)
+    observation_around()
     add_new_observation()
-    distribution_plot()
+    # distribution_plot()
     distribution_plot_from_sql()
 
 

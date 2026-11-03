@@ -77,6 +77,27 @@ class GeoNatureClient:
             return {}
         return response.json()
 
+    # --- exports --------------------------------------------------------
+    def get_data_from_export(self, id_export: int, limit: int = 1000, **filters) -> list:
+        """All rows of an export, fetched page by page until none are left.
+
+        filters are sent as query parameters, e.g. nom_valide="Bufo bufo".
+        """
+        data = []
+        offset = 0
+        while True:
+            response = self.get(
+                f"/exports/api/{id_export}", params={"limit": limit, "offset": offset, **filters},
+            )
+            response.raise_for_status()
+            items = response.json().get("items", [])
+            if isinstance(items, dict):  # GeoJSON export: a FeatureCollection
+                items = items["features"]
+            data.extend(items)
+            if len(items) < limit:
+                return data
+            offset += limit
+
     # --- occtax ---------------------------------------------------------
     def add_releve(self, payload: dict) -> requests.Response:
         return self.post("/occtax/releve", json=payload)
