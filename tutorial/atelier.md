@@ -11,6 +11,53 @@ Pour ça, nous vous proposons d'utiliser StreamLit pour sa simplicité d'utilisa
 
 _Sachant que le public de cette atelier est mixte, nous vous proposons de former des groupes avec au moins une personne avec des connaissances dans le langage Python._
 
+
+## Préparer son environnement de développement
+
+Comme vous l'avez peu-être devinez, nous allons nous appuyer sur le langage Python pour cette atelier !  
+
+### Installer `uv`
+
+Il est d'usage dans Python de créer des environnements virtuels pour cloisonner les applications et leur dépendances à certaines versions de librairies. Une des technologies récentes qui fait ses preuves dans la communauté est `uv`.
+
+Pour installer `uv`, je vous recommande la documentation officielle :https://docs.astral.sh/uv/getting-started/installation/
+
+**Pour les utilisateurs de Windows** UV est compatible avec Windows mais il est possible de créer des environnements virtuelles avec Anaconda.
+
+### Créer un environnement virtuel et installer les librairies
+
+Il suffit de lancer la commande `uv sync`.
+
+Un fois terminée, lancer `uv run check_env.py` pour vérifier que l'environnement virtuel est bien installé !
+
+
+### Configurer l'application avec son GeoNature
+
+Pour donner accès à son GeoNature, l'application utilise un fichier de configuration `.streamlit/secrets.toml`. 
+
+Créer ce fichier en vous appuyant sur le squelette suivant:
+
+```toml
+# API GeoNature (api/web.py)
+[geonature]
+api_url = "https://<votre-geonature>/api"
+login = "<login>"
+password = "<mot de passe>"
+
+# Connexion à la base GeoNature (api/sql_queries.py : st.connection("sql"))
+[connections.sql]
+url = "postgresql+psycopg2://<user>:<password>@<host>:5432/<database>"
+
+```
+
+
+### Lancement de l'app
+Une fois votre configuration remplie, vous pouvez lancer l'application avec la commande suivante : 
+
+```sh
+streamlit run main.py
+```
+
 ## Trois grand groupe d'accès au données 
 
 L'accès aux données de GeoNature dans GeoNature peut se diviser en trois grandes catégories: 
@@ -153,6 +200,51 @@ else:
 
 
 
+### Ensemble de fonctions fournies
+
+Vous trouverez dans le dossier `api`, un ensemble de fonctions Python pour récupérer de la données sur votre instance GeoNature
+
+
+#### GeoNature Client
+
+`api/web.py` définit `GeoNatureClient` : URL de l'API, authentification (`st.secrets["geonature"]`) et appels HTTP. Une instance partagée s'obtient avec `get_client()`.
+
+| Méthode | Route | Usage |
+|---|---|---|
+| `get_observations(limit, query_params, **filters)` | `POST /synthese/for_web` | Observations de la synthèse |
+| `autocomplete_taxons(search_str, full)` | `GET /taxhub/api/taxref/search/nom_valide/{texte}` | Recherche Taxref |
+| `get_nomenclatures(code_type)` | `GET /nomenclatures/nomenclature/{code_type}` | Termes d'une nomenclature |
+| `get_default_nomenclatures(*code_types)` | `GET /occtax/defaultNomenclatures` | Valeurs par défaut Occtax |
+| `add_releve(payload)` | `POST /occtax/releve` | Création d'un relevé |
+
+Pour une autre route : `get_client().get(chemin)` ou `.post(chemin, json=...)` (le jeton est ajouté automatiquement).
+
+```python
+from api.synthese import load_observations
+from api.occtax import add_observation
+
+gdf = load_observations(100, {}, cd_ref=[60612])  # GeoDataFrame, filtres de la synthèse
+
+add_observation(cd_nom=60612, nom_cite="Lynx lynx", lat=44.9, lon=6.3, id_dataset=1)
+```
+
+> [!WARNING]
+> `add_observation` écrit réellement dans GeoNature : vérifiez l'instance et le `id_dataset`.
+
+#### Requête SQL
+
+`api/sql_queries.py` interroge directement PostgreSQL via `st.connection("sql")` (configuré dans `.streamlit/secrets.toml`, section `[connections.sql]`).
+
+```python
+conn = st.connection("sql")
+df = conn.query("select * from gn_synthese.synthese limit :limit", params={"limit": 50})
+```
+
+Requêtes fournies : `last_observations_taxonomy(limit)` et `new_species(date)`. Tables clés : `gn_synthese.synthese` et `taxonomie.taxref`, reliées par `cd_nom`.
+
+> [!WARNING]
+> Utilisez un compte en lecture seule et des paramètres (`:limit`) plutôt que d'interpoler du texte (injection SQL).
+
 
 ### Widget mis à disposition 
 
@@ -192,23 +284,3 @@ taxon = taxref_input("taxon_add", full=True)       # -> {"nom_valide": ..., "cd_
 <div class="alert aler-block alert-info">
     Ces deux widgets sont déjà utilisés dans <code>main.py</code> : <code>taxref_input</code> pour filtrer les observations sur la carte et pour choisir le taxon d'une nouvelle observation, <code>nomenclature_input</code> pour choisir le sexe.
 </div>
-
-## Préparer son environnement de développement
-
-Comme vous l'avez peu-être devinez, nous allons nous appuyer sur le langage Python pour cette atelier !  
-
-### Installer `uv`
-
-Il est d'usage dans Python de créer des environnements virtuels pour cloisonner les applications et leur dépendances à certaines versions de librairies. Une des technologies récentes qui fait ses preuves dans la communauté est `uv`.
-
-Pour installer `uv`, je vous recommande la documentation officielle :https://docs.astral.sh/uv/getting-started/installation/
-
-**Pour les utilisateurs de Windows** UV est compatible avec Windows mais il est possible de créer des environnements virtuelles avec Anaconda.
-
-### Créer un environnement virtuel et installer les librairies
-
-Il suffit de lancer la commande `uv sync`.
-
-Un fois terminée, lancer `uv run check_env.py` pour vérifier que l'environnement virtuel est bien installé !
-
-### Lancement de l'app
