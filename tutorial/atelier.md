@@ -51,21 +51,41 @@ Dans une requête, il est possible d'ajouter des paramètres pour filtrer les do
 
 ### Export
 
-Un des points d'entrée les plus affichées est le module Export. Pour rappel, le module Export permet
-de définir une "vue" (un objet de base de données)
+Un des points d'entrée les plus affichées est le module Export. Pour rappel, le module Export permet de définir une "vue". Pour rappel, une **vue** est une table virtuel qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
+
+Pour récupérer les données produites par cette vue, il y a deux possibilités.
 
 #### Export - Fichier (statique)
 
+La première possibilité consiste à récupérer un fichier statique contenant les données souhaités parmi plusieurs formats de fichiers (csv, geojson, geopackage, shapefile).
 
+De base, le module Export lance la génération du fichier de manière asynchrone lorsque l'utilisateur initie la demande depuis l'interface. Une notification lui indiquera quand le fichier est prêt à être télécharger.
+
+![alt text](export-listitem.png)
+
+![alt text](export-notification.png)
+Une deuxième manière consiste à gnérer des fichiers de manières périodiques à l'aide des "exports planifiés". Cela permet de regènerer le fichier contenant les données de l'export de manière périodique et surtout de le rendre accessible depuis une URL. Dans le cas du parc national des Ecrins, cette URL est le point d'entrée à ces données d'observations sur [data.gouv.fr](https://www.data.gouv.fr/datasets/observations-de-biodiversite-faune-flore-du-parc-national-des-ecrins)
+
+![alt text](data-gouv.png)
+
+
+Le parc amazonien de Guyane utilise cette méthode pour peupler son LizMap.
 
 #### Export - API
 
+Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique,
+lorsque vous créer un export, ce dernier est rendu accessible dans une API accessible depuis l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`. 
+
+Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilise cette API pour récupérer l'accès au données sur une instance de GeoNature.
+
+![alt text](bam.png)
+
 ### SQL 
 
-
-
+Si tout à échoué dans votre quête pour récupérer la données par l'API ou par l'export, alors il vous reste... faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
 
 ## Streamlit
+
 Pour développer cette application, nous prenons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et très haut-niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
 
 ```python
