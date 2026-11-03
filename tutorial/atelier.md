@@ -1,41 +1,41 @@
 # Atelier Connexion d'une application avec GeoNature
 
-Dans cette atelier, l'objectif est de montré quels sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application. 
+Dans cet atelier, l'objectif est de montrer quelles sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application. 
 
 
 ## Objectif de l'atelier
 
-Dans les 1h30-2h d'atelier, nous vous proposons de manipuler les différents points d'entrée de données et produire des visualisations, synthèse à partir de ces dernières.
+Dans les 1h30-2h d'atelier, nous vous proposons de manipuler les différents points d'entrée de données et produire des visualisations et des synthèses à partir de ces dernières.
 
-Pour ça, nous vous proposons d'utiliser StreamLit pour sa simplicité d'utilisation avec un minimum de code ! Pour vous aider, nous proposons une application de base qui va vous permettre d'avoir une base pour la création de graphique, de formulaire utilisant l'API de GeoNature et même créer de la données sur GeoNature !
+Pour cela, nous vous proposons d'utiliser Streamlit pour sa simplicité d'utilisation avec un minimum de code ! Pour vous aider, nous proposons une application de base qui va vous permettre d'avoir un socle pour la création de graphiques, de formulaires utilisant l'API de GeoNature et même de créer des données sur GeoNature !
 
-_Sachant que le public de cette atelier est mixte, nous vous proposons de former des groupes avec au moins une personne avec des connaissances dans le langage Python._
+_Sachant que le public de cet atelier est mixte, nous vous proposons de former des groupes avec au moins une personne ayant des connaissances dans le langage Python._
 
 
 ## Préparer son environnement de développement
 
-Comme vous l'avez peu-être devinez, nous allons nous appuyer sur le langage Python pour cette atelier !  
+Comme vous l'avez peut-être deviné, nous allons nous appuyer sur le langage Python pour cet atelier !  
 
 ### Installer `uv`
 
-Il est d'usage dans Python de créer des environnements virtuels pour cloisonner les applications et leur dépendances à certaines versions de librairies. Une des technologies récentes qui fait ses preuves dans la communauté est `uv`.
+Il est d'usage dans Python de créer des environnements virtuels pour cloisonner les applications et leurs dépendances à certaines versions de librairies. Une des technologies récentes qui a fait ses preuves dans la communauté est `uv`.
 
-Pour installer `uv`, je vous recommande la documentation officielle :https://docs.astral.sh/uv/getting-started/installation/
+Pour installer `uv`, je vous recommande la documentation officielle : https://docs.astral.sh/uv/getting-started/installation/
 
-**Pour les utilisateurs de Windows** UV est compatible avec Windows mais il est possible de créer des environnements virtuelles avec Anaconda.
+**Pour les utilisateurs de Windows** `uv` est compatible avec Windows, mais il est aussi possible de créer des environnements virtuels avec Anaconda.
 
 ### Créer un environnement virtuel et installer les librairies
 
 Il suffit de lancer la commande `uv sync`.
 
-Un fois terminée, lancer `uv run check_env.py` pour vérifier que l'environnement virtuel est bien installé !
+Une fois terminée, lancez `uv run check_env.py` pour vérifier que l'environnement virtuel est bien installé !
 
 
 ### Configurer l'application avec son GeoNature
 
 Pour donner accès à son GeoNature, l'application utilise un fichier de configuration `.streamlit/secrets.toml`. 
 
-Créer ce fichier en vous appuyant sur le squelette suivant:
+Créez ce fichier en vous appuyant sur le squelette suivant :
 
 ```toml
 # API GeoNature (api/web.py)
@@ -51,6 +51,8 @@ url = "postgresql+psycopg2://<user>:<password>@<host>:5432/<database>"
 ```
 
 
+
+
 ### Lancement de l'app
 Une fois votre configuration remplie, vous pouvez lancer l'application avec la commande suivante : 
 
@@ -58,20 +60,20 @@ Une fois votre configuration remplie, vous pouvez lancer l'application avec la c
 streamlit run main.py
 ```
 
-## Trois grand groupe d'accès au données 
+## Trois grands groupes d'accès aux données 
 
-L'accès aux données de GeoNature dans GeoNature peut se diviser en trois grandes catégories: 
+L'accès aux données de GeoNature peut se diviser en trois grandes catégories :
 - API
 - Fichier
 - SQL
 
 ### API
 
-GeoNature est une application divisée en deux parties: (1) le _frontend_: l'interface client, (2) le _backend_ (entre autre) qui s'occupe de retourner les données à l'interface pour que ces dernières soient affichées. On parle plus généralement d'API.
+GeoNature est une application divisée en deux parties : (1) le _frontend_ : l'interface client, (2) le _backend_ (entre autres) qui s'occupe de retourner les données à l'interface pour que ces dernières soient affichées. On parle plus généralement d'API.
 
-C'est cette dernière partie qui nous intéresse ! Cette API est utilisable à l'aide du protocole HTTP. Ce protocole d'échange de données est implémenté dans une large partie des langages de programmations mais aussi d'outils et librairies de data analyse.
+C'est cette dernière partie qui nous intéresse ! Cette API est utilisable à l'aide du protocole HTTP. Ce protocole d'échange de données est implémenté dans une large partie des langages de programmation mais aussi d'outils et de librairies d'analyse de données.
 
-Par exemple, il est possible de récupérer la liste des cadres d'acquisitions avec l'adresse suivante :
+Par exemple, il est possible de récupérer la liste des cadres d'acquisition avec l'adresse suivante :
 
 `/meta/acquisition_frameworks`
 
@@ -109,7 +111,7 @@ Dans une requête, il est possible d'ajouter des paramètres pour filtrer les do
 
 ### Export
 
-Un des points d'entrée les plus affichées est le module Export. Ce dernier permet de définir une "vue", une table virtuel qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
+Un des points d'entrée les plus utilisés est le module Export. Ce dernier permet de définir une « vue », une table virtuelle qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
 
 Pour récupérer les données produites par cette vue dans le module Export, il y a deux possibilités.
 
@@ -121,11 +123,11 @@ De base, le module Export lance la génération du fichier de manière asynchron
 
 ![alt text](export-listitem.png)
 
-Une fois le fichier généré, une notification lui indiquera quand le fichier est prêt à être télécharger.
+Une fois le fichier généré, une notification lui indiquera quand le fichier est prêt à être téléchargé.
 
 ![alt text](export-notification.png)
 
-Une deuxième manière consiste à générer des fichiers de manières périodiques à l'aide des "exports planifiés". Cela permet de régénérer le fichier contenant les données de l'export de manière périodique et surtout de le rendre accessible depuis une URL. Dans le cas du parc national des Ecrins, cette URL est le point d'entrée à ces données d'observations sur [data.gouv.fr](https://www.data.gouv.fr/datasets/observations-de-biodiversite-faune-flore-du-parc-national-des-ecrins)
+Une deuxième manière consiste à générer des fichiers de manière périodique à l'aide des « exports planifiés ». Cela permet de régénérer le fichier contenant les données de l'export de manière périodique et surtout de le rendre accessible depuis une URL. Dans le cas du parc national des Ecrins, cette URL est le point d'entrée vers ces données d'observations sur [data.gouv.fr](https://www.data.gouv.fr/datasets/observations-de-biodiversite-faune-flore-du-parc-national-des-ecrins)
 
 ![alt text](data-gouv.png)
 
@@ -134,20 +136,20 @@ Une deuxième manière consiste à générer des fichiers de manières périodiq
 
 #### Export - API
 
-Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique !
-lorsque vous créer un export, ce dernier est rendu accessible dans une API accessible depuis l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`. 
+Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution des données en temps réel ! Pas de panique !
+Lorsque vous créez un export, ce dernier est rendu accessible via une API disponible à l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`. 
 
-Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilise cette API pour récupérer l'accès au données sur une instance de GeoNature.
+Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilisent cette API pour accéder aux données d'une instance de GeoNature.
 
 ![alt text](bam.png)
 
 ### SQL 
 
-Si tout à échoué dans votre quête pour récupérer la données par l'API ou par l'export, alors il vous reste... à faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
+Si tout a échoué dans votre quête pour récupérer les données par l'API ou par l'export, alors il vous reste... à faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
 
 ## Streamlit
 
-Pour développer votre dashboard, nous vous proposons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et très haut-niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
+Pour développer votre dashboard, nous vous proposons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et de très haut niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
 
 ```python
 import streamlit as st
@@ -178,12 +180,12 @@ else:
     st.write("Indiquer des coordonnées")
 ```
 
-`streamlit` est construit autour de méthodes permettant de faire des choses simples avec le moins de ligne de code possible. Dans l'exemple ci-dessus :
+`streamlit` est construit autour de méthodes permettant de faire des choses simples avec le moins de lignes de code possible. Dans l'exemple ci-dessus :
 
  - `st.write` affiche du texte 
- - `st.number_input` créer un formulaire pour saisir un nombre et le stock dans la variable associée. **Si une valeur d'un formulaire est modifiée, alors l'ensemble du code qui utilise les variables associées (ici, `lon1, lon2, lat1, lat2`) se relance.**
- - `st.subheader` créer un sous-titre et `st.header` créer un titre.
- - `st.columns(n)` créer deux colonnes
+ - `st.number_input` crée un champ pour saisir un nombre et le stocke dans la variable associée. **Si une valeur d'un formulaire est modifiée, alors l'ensemble du code qui utilise les variables associées (ici, `lon1, lon2, lat1, lat2`) se relance.**
+ - `st.subheader` crée un sous-titre et `st.header` crée un titre.
+ - `st.columns(n)` crée `n` colonnes
 
 
  Pour plus d'informations, rendez-vous sur la doc de [**Streamlit** ](https://docs.streamlit.io/develop/api-reference)
@@ -202,7 +204,7 @@ else:
 
 ### Ensemble de fonctions fournies
 
-Vous trouverez dans le dossier `api`, un ensemble de fonctions Python pour récupérer de la données sur votre instance GeoNature
+Vous trouverez dans le dossier `api`, un ensemble de fonctions Python pour récupérer des données sur votre instance GeoNature.
 
 
 #### GeoNature Client
@@ -281,6 +283,9 @@ taxon = taxref_input("taxon_add", full=True)       # -> {"nom_valide": ..., "cd_
  - `session_key` : clé Streamlit du widget (par défaut `"cd_nom"`). Elle doit être unique par widget sur la page.
  - `full` : si `False` (défaut), retourne le `cd_ref` du taxon, pratique pour filtrer la synthèse (`{"cd_ref": [cd_ref]}`). Si `True`, retourne un dictionnaire avec `nom_valide` et `cd_nom`, nécessaire pour ajouter une observation.
 
-<div class="alert aler-block alert-info">
-    Ces deux widgets sont déjà utilisés dans <code>main.py</code> : <code>taxref_input</code> pour filtrer les observations sur la carte et pour choisir le taxon d'une nouvelle observation, <code>nomenclature_input</code> pour choisir le sexe.
-</div>
+
+> [!NOTE]
+> Ces deux widgets sont déjà utilisés dans `main.py` :
+> `taxref_input` pour filtrer les observations sur la carte et
+> pour choisir le taxon d'une nouvelle observation,
+> `nomenclature_input` pour choisir le sexe.
