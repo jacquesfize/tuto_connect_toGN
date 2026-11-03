@@ -3,15 +3,26 @@
 Dans cette atelier, l'objectif est de montré quels sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application. 
 
 
+## Objectif de l'atelier
+
+Dans les 1h30-2h d'atelier, nous vous proposons de manipuler les différents points d'entrée de données et produire des visualisations, synthèse à partir de ces dernières.
+
+Pour ça, nous vous proposons d'utiliser StreamLit pour sa simplicité d'utilisation avec un minimum de code ! Pour vous aider, nous proposons une application de base qui va vous permettre d'avoir une base pour la création de graphique, de formulaire utilisant l'API de GeoNature et même créer de la données sur GeoNature !
+
+_Sachant que le public de cette atelier est mixte, nous vous proposons de former des groupes avec au moins une personne avec des connaissances dans le langage Python._
+
 ## Trois grand groupe d'accès au données 
 
-L'accès aux données de GeoNature
+L'accès aux données de GeoNature dans GeoNature peut se diviser en trois grandes catégories: 
+- API
+- Fichier
+- SQL
 
 ### API
 
-GeoNature est une application divisée en deux parties: (1) le _frontend_: l'interface client, (2) le _backend_ (entre autre) qui s'occupe de retourner les données à l'interface pour que ces dernières soient affichées. On parle aussi d'API.
+GeoNature est une application divisée en deux parties: (1) le _frontend_: l'interface client, (2) le _backend_ (entre autre) qui s'occupe de retourner les données à l'interface pour que ces dernières soient affichées. On parle plus généralement d'API.
 
-C'est cette dernière partie qui nous intéresse ! Cette API est utilisable à l'aide du protocole HTTP. Ce protocole d'échange de données est implémenté dans une large partie des langages de programmations mais aussi de data analyse.
+C'est cette dernière partie qui nous intéresse ! Cette API est utilisable à l'aide du protocole HTTP. Ce protocole d'échange de données est implémenté dans une large partie des langages de programmations mais aussi d'outils et librairies de data analyse.
 
 Par exemple, il est possible de récupérer la liste des cadres d'acquisitions avec l'adresse suivante :
 
@@ -51,29 +62,32 @@ Dans une requête, il est possible d'ajouter des paramètres pour filtrer les do
 
 ### Export
 
-Un des points d'entrée les plus affichées est le module Export. Pour rappel, le module Export permet de définir une "vue". Pour rappel, une **vue** est une table virtuel qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
+Un des points d'entrée les plus affichées est le module Export. Ce dernier permet de définir une "vue", une table virtuel qui permet de récupérer le résultat d'une requête utilisée fréquemment. Le grand avantage est d'avoir un point d'entrée de données complètement sur mesure pour la structure qui gère une instance de GeoNature.
 
-Pour récupérer les données produites par cette vue, il y a deux possibilités.
+Pour récupérer les données produites par cette vue dans le module Export, il y a deux possibilités.
 
 #### Export - Fichier (statique)
 
-La première possibilité consiste à récupérer un fichier statique contenant les données souhaités parmi plusieurs formats de fichiers (csv, geojson, geopackage, shapefile).
+La première possibilité consiste à récupérer un fichier statique contenant les données souhaitées parmi plusieurs formats de fichiers (csv, geojson, geopackage, shapefile).
 
-De base, le module Export lance la génération du fichier de manière asynchrone lorsque l'utilisateur initie la demande depuis l'interface. Une notification lui indiquera quand le fichier est prêt à être télécharger.
+De base, le module Export lance la génération du fichier de manière asynchrone lorsque l'utilisateur initie la demande depuis l'interface.
 
 ![alt text](export-listitem.png)
 
+Une fois le fichier généré, une notification lui indiquera quand le fichier est prêt à être télécharger.
+
 ![alt text](export-notification.png)
-Une deuxième manière consiste à gnérer des fichiers de manières périodiques à l'aide des "exports planifiés". Cela permet de regènerer le fichier contenant les données de l'export de manière périodique et surtout de le rendre accessible depuis une URL. Dans le cas du parc national des Ecrins, cette URL est le point d'entrée à ces données d'observations sur [data.gouv.fr](https://www.data.gouv.fr/datasets/observations-de-biodiversite-faune-flore-du-parc-national-des-ecrins)
+
+Une deuxième manière consiste à générer des fichiers de manières périodiques à l'aide des "exports planifiés". Cela permet de régénérer le fichier contenant les données de l'export de manière périodique et surtout de le rendre accessible depuis une URL. Dans le cas du parc national des Ecrins, cette URL est le point d'entrée à ces données d'observations sur [data.gouv.fr](https://www.data.gouv.fr/datasets/observations-de-biodiversite-faune-flore-du-parc-national-des-ecrins)
 
 ![alt text](data-gouv.png)
 
 
-Le parc amazonien de Guyane utilise cette méthode pour peupler son LizMap.
+<!-- Le parc amazonien de Guyane utilise cette méthode pour peupler son LizMap. -->
 
 #### Export - API
 
-Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique,
+Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique !
 lorsque vous créer un export, ce dernier est rendu accessible dans une API accessible depuis l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`. 
 
 Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilise cette API pour récupérer l'accès au données sur une instance de GeoNature.
@@ -82,11 +96,11 @@ Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilise cette
 
 ### SQL 
 
-Si tout à échoué dans votre quête pour récupérer la données par l'API ou par l'export, alors il vous reste... faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
+Si tout à échoué dans votre quête pour récupérer la données par l'API ou par l'export, alors il vous reste... à faire vos propres requêtes sur la base de données PostgreSQL de GeoNature.
 
 ## Streamlit
 
-Pour développer cette application, nous prenons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et très haut-niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
+Pour développer votre dashboard, nous vous proposons un framework simple d'utilisation : [Streamlit](https://streamlit.io/). Ce framework a pour avantage de proposer une programmation simple et très haut-niveau. Par exemple, ce code suffit à afficher un formulaire pour calculer la distance entre deux coordonnées : 
 
 ```python
 import streamlit as st
@@ -128,20 +142,56 @@ else:
  Pour plus d'informations, rendez-vous sur la doc de [**Streamlit** ](https://docs.streamlit.io/develop/api-reference)
 
 
+> [!NOTE]
+> Dans ce tutoriel, nous utilisons **Streamlit** pour sa simplicité et la rapidité de mise en place de POCs. Il existe toutefois plusieurs technologies, chacune avec ses avantages et inconvénients, permettant de faire de la visualisation de données. Pour n'en citer qu'une infime partie :
+>
+> - <img src="https://cdn.simpleicons.org/python" height="20"> **Dash** : framework Python spécialisé dans la création d'applications web de type dashboard. Il s'appuie principalement sur Plotly, une librairie permettant de générer des graphiques interactifs. <https://dash.plotly.com/>
+> - <img src="https://cdn.simpleicons.org/r" height="20"> **RShiny** : framework de création de dashboards bien connu de la communauté R. Très puissant, stable et supporté par les créateurs de R. <https://shiny.posit.co/>
+> - <img src="https://cdn.simpleicons.org/grafana" height="20"> **Grafana** : outil de monitoring qui permet aussi de créer des dashboards. Il est possible de créer des graphiques à partir de données provenant d'API. À la différence des précédents, il ne demande pas de « coder » : les dashboards se construisent uniquement à l'aide d'une interface. <https://grafana.com/>
+> - <img src="https://cdn.simpleicons.org/gradio" height="20"> **Gradio** : framework d'interfaces web plus orienté vers la connexion à des modèles de machine learning, deep learning, etc. <https://gradio.app/>
+> - Autres : [Observable](https://observablehq.com/) (équivalent notebook 100 % JS, uniquement utilisable en ligne), [Flet](https://flet.dev/)
+
+
+
+
+### Widget mis à disposition 
+
+Pour ne pas perdre de temps sur les formulaires, le dossier `widget/` contient deux composants Streamlit prêts à l'emploi. Ils appellent l'API de GeoNature/TaxHub via le client défini dans `api/web.py`.
+
+#### Nomenclature
+
+`nomenclature_input` (dans `widget/nomenclature.py`) affiche une liste déroulante avec recherche sur les termes d'un type de nomenclature GeoNature (ex : `SEXE`, `STATUT_BIO`).
+
+```python
+from widget.nomenclature import nomenclature_input
+
+id_sex = nomenclature_input("SEXE", "Sexe")
+```
+
+ - `code_type` : code du type de nomenclature (ex : `"SEXE"`).
+ - `label` : libellé affiché au-dessus du champ (par défaut, le `code_type`).
+ - `session_key` : clé Streamlit du widget (par défaut `nomenclature_<code_type>`). À préciser si vous utilisez deux fois le même type sur la page.
+ - **Retourne** l'`id_nomenclature` du terme choisi, ou `None` si rien n'est sélectionné.
+
+Les termes proviennent de la route `/nomenclatures/nomenclature/{code_type}`.
+
+#### Recherche de taxon
+
+`taxref_input` (dans `widget/taxon.py`) affiche un champ de recherche avec autocomplétion sur Taxref (via TaxHub, route `/taxhub/api/taxref/search/nom_valide/{texte}`). Il s'appuie sur la librairie `streamlit_searchbox`.
+
+```python
+from widget.taxon import taxref_input
+
+cd_ref = taxref_input("cd_ref")                    # -> cd_ref (int) ou None
+taxon = taxref_input("taxon_add", full=True)       # -> {"nom_valide": ..., "cd_nom": ...} ou None
+```
+
+ - `session_key` : clé Streamlit du widget (par défaut `"cd_nom"`). Elle doit être unique par widget sur la page.
+ - `full` : si `False` (défaut), retourne le `cd_ref` du taxon, pratique pour filtrer la synthèse (`{"cd_ref": [cd_ref]}`). Si `True`, retourne un dictionnaire avec `nom_valide` et `cd_nom`, nécessaire pour ajouter une observation.
+
 <div class="alert aler-block alert-info">
-    Dans ce tutoriel, nous utilisons <strong>Streamlit</strong> pour sa simplicité et la rapidité pour mettre en place rapidement des POCs. Toutefois, ils existent plusieurs technologies --chacune avec ses avantages et inconvénients-- permettant de faire de la visualisation de données. Pour n'en citer qu'une infime partie : 
-    <ul>
-        <li><img src="https://cdn.simpleicons.org/python" height="20"> Dash est un framework Python spécialisée dans la création d'application Web pour la création de dashboard. Il s'appuie principalement sur Plotly une librairie utilisé pour générer des graphiques interactifs. <a href="https://dash.plotly.com/">https://dash.plotly.com/</a></li>
-        <li><img src="https://cdn.simpleicons.org/r" height="20">
- RShiny est un autre framework de création de Dashboard bien connu de la communauté R. Très puissant, stable et supporté par les créateurs de R. <a href="https://dash.plotly.com/">https://dash.plotly.com/</a></li>
-        <li><img src="https://cdn.simpleicons.org/grafana" height="20">Grafana est un outil de monitoring qui permet de créer des dashboards. Plutôt utilisées comme outils de surveillance la plupart du temps. Malgré tout, il est possible de créer des graphiques en s'appuyant sur des données provenant d'API. A la différence des précédents, ce dernier ne demande pas de "coder" vu que les dashboards sont fait uniquement à l'aide d'une interface. <a href="https://grafana.com/">https://grafana.com/</a> </li>
-        <li><img src="https://cdn.simpleicons.org/gradio" height="20"> Gradio est un framework qui permet de faire des interfaces Web mais plus orienté pour sa connectivité avec les modèles de machine-learning, deep-learning, etc. <a href="https://gradio.app/">https://gradio.app/</a></li>
-        <li>Autres : <a href="https://observablehq.com/">Observable</a> (équivalent notebook 100% JS, uniquement utilisable en ligne), <a href="https://flet.dev/">Flet</a> </li>
-    </ul>
+    Ces deux widgets sont déjà utilisés dans <code>main.py</code> : <code>taxref_input</code> pour filtrer les observations sur la carte et pour choisir le taxon d'une nouvelle observation, <code>nomenclature_input</code> pour choisir le sexe.
 </div>
-
-
-
 
 ## Préparer son environnement de développement
 
