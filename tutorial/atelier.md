@@ -53,7 +53,7 @@ url = "postgresql+psycopg2://rencontres_gn:<mdp>@demo.geonature.fr:5437/geonatur
 Une fois votre configuration remplie, vous pouvez lancer l'application avec la commande suivante :
 
 ```sh
-streamlit run main.py
+uv run streamlit run main.py
 ```
 
 ## Trois grands groupes d'accès aux données
@@ -133,6 +133,7 @@ Une deuxième manière consiste à générer des fichiers de manière périodiqu
 
 Cette première possibilité d'export est intéressante mais ne permet pas de profiter de l'évolution de la données en temps-réel ! Pas de panique !
 lorsque vous créer un export, ce dernier est rendu accessible dans une API accessible depuis l'adresse : `<URL_GEONATURE>/api/export/<ID_EXPORT>`.
+Pour cet atelier, nous avons créer un export avec les données de l'ARB autour du Totem : `https://demo.geonature.fr/geonature/api/exports/api/38`
 
 Des applications comme [BAM](https://github.com/PnX-SI/BAM-widget) utilisent cette API pour accéder aux données d'une instance de GeoNature.
 
