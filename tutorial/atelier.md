@@ -2,6 +2,9 @@
 
 Dans cet atelier, l'objectif est de montrer quelles sont les différentes entrées pour récupérer (de manière dynamique) et saisir des données dans GeoNature et les valoriser dans une application.
 
+Présentation :
+https://docs.numerique.gouv.fr/docs/32ec37b3-389c-44b6-9539-2eb8745d990f/
+
 ## Objectif de l'atelier
 
 Dans les 1h30-2h d'atelier, nous vous proposons de manipuler les différents points d'entrée de données et produire des visualisations et des synthèses à partir de ces dernières.
