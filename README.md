@@ -7,6 +7,7 @@ Prérequis : [uv](https://docs.astral.sh/uv/getting-started/installation/)
 ```bash
 git clone https://github.com/jacquesfize/tuto_connect_toGN.git
 cd tuto_connect_toGN
+sudo apt install libpq-dev
 uv sync
 ```
 
