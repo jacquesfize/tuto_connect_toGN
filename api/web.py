@@ -98,6 +98,15 @@ class GeoNatureClient:
                 return data
             offset += limit
 
+    def get_list_id_exports(_self) -> list:
+        """IDs of all available (public) exports for the GeoNature instance.
+        """
+        response = _self.get("/exports")
+        if response.status_code != 200:
+            return []
+        list_id_export = [dict_export['id'] for dict_export in response.json()]
+        return list_id_export
+
     # --- occtax ---------------------------------------------------------
     def add_releve(self, payload: dict) -> requests.Response:
         return self.post("/occtax/releve", json=payload)
