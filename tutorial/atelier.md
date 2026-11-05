@@ -287,3 +287,56 @@ taxon = taxref_input("taxon_add", full=True)       # -> {"nom_valide": ..., "cd_
 > `taxref_input` pour filtrer les observations sur la carte et
 > pour choisir le taxon d'une nouvelle observation,
 > `nomenclature_input` pour choisir le sexe.
+
+
+### Créer la vue d'export dans votre GeoNature
+
+**N'oublier de changer l'`id_dataset` !!** 
+
+```sql
+-- gn_exports.export_rencontre_gn_2026 source
+
+CREATE OR REPLACE VIEW gn_exports.export_rencontre_gn_2026
+AS SELECT s.id_synthese,
+    s.unique_id_sinp,
+    s.id_dataset,
+    s.id_nomenclature_geo_object_nature,
+    s.id_nomenclature_grp_typ,
+    s.grp_method,
+    s.id_nomenclature_obs_technique,
+    s.id_nomenclature_bio_status,
+    s.id_nomenclature_bio_condition,
+    s.id_nomenclature_valid_status,
+    s.id_nomenclature_life_stage,
+    s.id_nomenclature_sex,
+    s.id_nomenclature_obj_count,
+    s.id_nomenclature_sensitivity,
+    s.id_nomenclature_observation_status,
+    s.id_nomenclature_behaviour,
+    s.id_nomenclature_biogeo_status,
+    s.count_min,
+    s.count_max,
+    s.cd_nom,
+    s.cd_hab,
+    s.altitude_min,
+    s.altitude_max,
+    s.the_geom_4326,
+    s.date_min,
+    s.date_max,
+    s.validator,
+    s.validation_comment,
+    s.observers,
+    s.determiner,
+    s.id_digitiser,
+    s.comment_context,
+    s.comment_description,
+    t.nom_vern,
+    t.lb_nom,
+    t.ordre,
+    t.famille,
+    t.regne,
+    t.classe
+   FROM gn_synthese.synthese s
+     JOIN taxonomie.taxref t ON t.cd_nom = s.cd_nom
+  WHERE s.id_dataset = 85;
+```
