@@ -8,6 +8,7 @@ from api.sql_queries import last_observations_taxonomy, new_species
 from api.synthese import load_observations
 from api.export import load_data_from_export
 
+from widget.export import export_input
 from widget.nomenclature import nomenclature_input
 from widget.taxon import taxref_input
 
@@ -51,7 +52,8 @@ def discover_new_species(limit):
 
 def observation_around():
     st.header("Observations autour des rencontres (API export)")
-    st.map(load_data_from_export(38), size=5)
+    id_export = export_input()
+    st.map(load_data_from_export(id_export), size=5)
 
 
 
